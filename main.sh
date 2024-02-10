@@ -6,7 +6,7 @@ mkdir -p $CACHE_DIR
 
 curl() {
     # Copy from https://github.com/XTLS/Xray-install
-    if ! $(type -P curl) -L -q --retry 5 --retry-delay 10 --retry-max-time 60 "$@";then
+    if ! $(type -P curl) -L -q -s --retry 5 --retry-delay 10 --retry-max-time 60 "$@";then
         echo "ERROR:Curl Failed, check your network"
         exit 1
     fi
