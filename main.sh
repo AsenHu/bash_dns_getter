@@ -4,14 +4,6 @@
 CACHE_DIR="/tmp/resolve_dns"
 mkdir -p $CACHE_DIR
 
-curl() {
-    # Copy from https://github.com/XTLS/Xray-install
-    if ! $(type -P curl) -L -q -s --retry 5 --retry-delay 10 --retry-max-time 60 "$@";then
-        echo "ERROR:Curl Failed, check your network"
-        exit 1
-    fi
-}
-
 # 检查缓存是否存在，并且是否过期
 get_cache() {
     local domain=$1
