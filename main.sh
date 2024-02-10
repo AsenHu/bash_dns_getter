@@ -4,6 +4,14 @@
 CACHE_DIR="/tmp/resolve_dns"
 mkdir -p $CACHE_DIR
 
+curl() {
+    # Copy from https://github.com/XTLS/Xray-install
+    if ! $(type -P curl) -L -q --cacert /etc/ssl/certs/ca-certificates.crt --retry 5 --retry-delay 10 --retry-max-time 60 "$@";then
+        echo "ERROR:Curl Failed, check your network"
+        exit 1
+    fi
+}
+
 # 检查缓存是否存在，并且是否过期
 get_cache() {
     local domain=$1
@@ -33,7 +41,7 @@ get_dns_result() {
     type=$2
     cache_path="$CACHE_DIR/${domain}_${type}"
 
-    json=$(curl --cacert /etc/ssl/certs/ca-certificates.crt -H "accept: application/dns-json" "https://cloudflare-dns.com/dns-query?name=$domain&type=$type")
+    json=$(curl -H "accept: application/dns-json" "https://cloudflare-dns.com/dns-query?name=$domain&type=$type")
     readarray -t ret < <(echo "$json" | jq -r '.Answer | map(.data) | .[]')
     readarray -t TTLs < <(echo "$json" | jq -r '.Answer | map(.TTL) | .[]')
 
