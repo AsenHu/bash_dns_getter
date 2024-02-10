@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置缓存目录
-CACHE_DIR="./tmp"
+CACHE_DIR="/tmp/resolve_dns"
 mkdir -p $CACHE_DIR
 
 curl() {
@@ -40,7 +40,6 @@ get_dns_result() {
     domain=$1
     type=$2
     cache_path="$CACHE_DIR/${domain}_${type}"
-    
 
     json=$(curl -H "accept: application/dns-json" "https://cloudflare-dns.com/dns-query?name=$domain&type=$type")
     readarray -t ret < <(echo "$json" | jq -r '.Answer | map(.data) | .[]')
